@@ -132,7 +132,7 @@
         .nav-buttons {
             margin-bottom: 15px;
             display: flex;
-            gap: 15px;
+            gap: 10px;
             align-items: center;
             flex-wrap: wrap;
         }
@@ -155,6 +155,20 @@
             overflow: hidden;
             border-radius: 4px;
             background-color: rgba(0, 0, 0, 0.2);
+        }
+
+        /* Fullscreen Mode Adjustments */
+        .image-wrapper:fullscreen {
+            width: 100vw;
+            height: 100vh;
+            background-color: #000;
+            border-radius: 0;
+        }
+
+        .image-wrapper:-webkit-full-screen {
+            width: 100vw;
+            height: 100vh;
+            background-color: #000;
         }
 
         .image-display {
@@ -202,7 +216,6 @@
             scroll-behavior: smooth;
         }
 
-        /* Custom scrollbar for carousel */
         .thumbnail-carousel::-webkit-scrollbar {
             height: 8px;
         }
@@ -264,7 +277,7 @@
             <ul id="tag-list" class="tag-list"></ul>
             
             <hr style="border-color: var(--button-bg); margin-top: 20px;">
-            <p><small>Shortcuts: Use <strong>←</strong> and <strong>→</strong> keys to flip. Use mouse wheel to zoom or click-and-drag to pan.</small></p>
+            <p><small>Shortcuts: Use <strong>←</strong> and <strong>→</strong> keys to flip. Double click image or use button for Fullscreen.</small></p>
         </div>
 
         <!-- Main Display -->
@@ -279,6 +292,11 @@
                 <button class="btn" onclick="zoomIn()">Zoom +</button>
                 <button class="btn" onclick="zoomOut()">Zoom -</button>
                 <button class="btn" onclick="resetZoom()">Reset (1:1)</button>
+                
+                <div class="zoom-divider"></div>
+
+                <!-- Fullscreen Button -->
+                <button class="btn" id="fullscreen-btn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
             </div>
 
             <div class="image-wrapper" id="image-wrapper">
@@ -313,6 +331,7 @@
         const imgElement = document.getElementById('image-display');
         const imgWrapper = document.getElementById('image-wrapper');
         const thumbnailCarousel = document.getElementById('thumbnail-carousel');
+        const fullscreenBtn = document.getElementById('fullscreen-btn');
 
         // Fetch posts.json from GitHub
         async function loadPosts() {
@@ -414,6 +433,36 @@
             currentIndex = (currentIndex - 1 + filteredPosts.length) % filteredPosts.length;
             updateViewer();
         }
+
+        /* --- Fullscreen Logic --- */
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                if (imgWrapper.requestFullscreen) {
+                    imgWrapper.requestFullscreen();
+                } else if (imgWrapper.webkitRequestFullscreen) { /* Safari */
+                    imgWrapper.webkitRequestFullscreen();
+                } else if (imgWrapper.msRequestFullscreen) { /* IE11 */
+                    imgWrapper.msRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        // Update Fullscreen Button Label on change
+        document.addEventListener('fullscreenchange', () => {
+            if (document.fullscreenElement) {
+                fullscreenBtn.textContent = '✕ Exit Fullscreen';
+            } else {
+                fullscreenBtn.textContent = '⛶ Fullscreen';
+                resetZoom();
+            }
+        });
+
+        // Double click image to enter/exit fullscreen
+        imgElement.addEventListener('dblclick', toggleFullscreen);
 
         /* --- Zoom and Pan Logic --- */
         function applyTransform() {
