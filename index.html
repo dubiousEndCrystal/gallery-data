@@ -70,6 +70,7 @@
             border-radius: 4px;
             cursor: pointer;
             font-weight: bold;
+            user-select: none;
         }
 
         .btn:hover {
@@ -132,13 +133,44 @@
             margin-bottom: 15px;
             display: flex;
             gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .zoom-divider {
+            height: 20px;
+            width: 1px;
+            background-color: var(--accent-color);
+            margin: 0 5px;
+        }
+
+        /* Image viewport wrapper to enable clean panning/zooming */
+        .image-wrapper {
+            position: relative;
+            width: 100%;
+            height: 65vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            border-radius: 4px;
+            background-color: rgba(0, 0, 0, 0.2);
         }
 
         .image-display {
             max-width: 100%;
-            max-height: 65vh;
+            max-height: 100%;
+            object-fit: contain;
             border-radius: 4px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            cursor: grab;
+            transition: transform 0.05s ease-out;
+            transform-origin: center center;
+            user-select: none;
+        }
+
+        .image-display:active {
+            cursor: grabbing;
         }
 
         .counter {
@@ -169,7 +201,7 @@
             <ul id="tag-list" class="tag-list"></ul>
             
             <hr style="border-color: var(--button-bg); margin-top: 20px;">
-            <p><small>Shortcuts: Use <strong>←</strong> and <strong>→</strong> keys to flip images.</small></p>
+            <p><small>Shortcuts: Use <strong>←</strong> and <strong>→</strong> keys to flip. Use mouse wheel to zoom or click-and-drag to pan.</small></p>
         </div>
 
         <!-- Main Display -->
@@ -177,9 +209,18 @@
             <div class="nav-buttons">
                 <button class="btn" onclick="showPrev()">◄ Previous</button>
                 <button class="btn" onclick="showNext()">Next ►</button>
+                
+                <div class="zoom-divider"></div>
+                
+                <!-- Zoom Controls -->
+                <button class="btn" onclick="zoomIn()">Zoom +</button>
+                <button class="btn" onclick="zoomOut()">Zoom -</button>
+                <button class="btn" onclick="resetZoom()">Reset (1:1)</button>
             </div>
 
-            <img id="image-display" class="image-display" src="" alt="Post Image">
+            <div class="image-wrapper" id="image-wrapper">
+                <img id="image-display" class="image-display" src="" alt="Post Image" draggable="false">
+            </div>
 
             <div class="counter" id="counter-text">Image 0 of 0</div>
         </div>
@@ -187,12 +228,24 @@
 
     <script>
         // CONFIGURATION: Replace with your actual GitHub Raw URL
-        const GITHUB_JSON_URL = 'https://raw.githubusercontent.com/dubiousEndCrystal/gallery-data/main/posts.json';
+        const GITHUB_JSON_URL = 'https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME/main/posts.json';
 
         let allPosts = [];
         let filteredPosts = [];
         let currentIndex = 0;
 
+        // Zoom & Pan state variables
+        let scale = 1;
+        let translateX = 0;
+        let translateY = 0;
+        let isDragging = false;
+        let startX = 0;
+        let startY = 0;
+
+        const imgElement = document.getElementById('image-display');
+        const imgWrapper = document.getElementById('image-wrapper');
+
+        // Fetch posts.json from GitHub
         async function loadPosts() {
             try {
                 const response = await fetch(`${GITHUB_JSON_URL}?t=${Date.now()}`);
@@ -218,10 +271,12 @@
         function updateViewer() {
             if (filteredPosts.length === 0) return;
 
+            resetZoom();
+
             const post = filteredPosts[currentIndex];
 
             // Update Image
-            document.getElementById('image-display').src = post.imageUrl;
+            imgElement.src = post.imageUrl;
 
             // Update Metadata
             document.getElementById('post-title').textContent = post.title;
@@ -255,6 +310,63 @@
             updateViewer();
         }
 
+        /* --- Zoom and Pan Logic --- */
+        function applyTransform() {
+            imgElement.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+        }
+
+        function zoomIn() {
+            scale = Math.min(scale + 0.3, 5); // Max zoom 5x
+            applyTransform();
+        }
+
+        function zoomOut() {
+            scale = Math.max(scale - 0.3, 0.5); // Min zoom 0.5x
+            if (scale === 1) {
+                translateX = 0;
+                translateY = 0;
+            }
+            applyTransform();
+        }
+
+        function resetZoom() {
+            scale = 1;
+            translateX = 0;
+            translateY = 0;
+            applyTransform();
+        }
+
+        // Mouse Wheel Zooming
+        imgWrapper.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            if (e.deltaY < 0) {
+                zoomIn();
+            } else {
+                zoomOut();
+            }
+        });
+
+        // Click-and-Drag Panning
+        imgElement.addEventListener('mousedown', (e) => {
+            if (scale <= 1) return; // Only drag when zoomed in
+            isDragging = true;
+            startX = e.clientX - translateX;
+            startY = e.clientY - translateY;
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            e.preventDefault();
+            translateX = e.clientX - startX;
+            translateY = e.clientY - startY;
+            applyTransform();
+        });
+
+        window.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+
+        /* --- Search & Navigation Helpers --- */
         function executeSearch() {
             const query = document.getElementById('search-input').value.toLowerCase().trim();
             if (!query) {
