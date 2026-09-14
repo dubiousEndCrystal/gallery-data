@@ -1,0 +1,98 @@
+[
+  {
+    "id": 1,
+    "title": "Lilith",
+    "author": "ElectricFuzzball",
+    "description": "",
+    "tags": ["digital_art"],
+    "imageUrl": "https://raw.githubusercontent.com/dubiousEndCrystal/gallery-data/main/images/Lilith_ExtraB.png"
+  },
+  {
+    "id": 2,
+    "title": "Basil",
+    "author": "ElectricFuzzball",
+    "description": "",
+    "tags": ["digital_art"],
+    "imageUrl": "https://raw.githubusercontent.com/dubiousEndCrystal/gallery-data/main/images/basil_B.png"
+  },
+  {
+    "id": 3,
+    "title": "Ochiba",
+    "author": "ElectricFuzzball",
+    "description": "",
+    "tags": ["digital_art"],
+    "imageUrl": "https://raw.githubusercontent.com/dubiousEndCrystal/gallery-data/main/images/chiba_B.png"
+  },
+  {
+    "id": 4,
+    "title": "Comet",
+    "author": "ElectricFuzzball",
+    "description": "",
+    "tags": ["digital_art"],
+    "imageUrl": "https://raw.githubusercontent.com/dubiousEndCrystal/gallery-data/main/images/cometB.png"
+  },
+  {
+    "id": 5,
+    "title": "Daisy Mae",
+    "author": "ElectricFuzzball",
+    "description": "",
+    "tags": ["digital_art"],
+    "imageUrl": "https://raw.githubusercontent.com/dubiousEndCrystal/gallery-data/main/images/daisyB.png"
+  },
+  {
+    "id": 6,
+    "title": "Opal",
+    "author": "ElectricFuzzball",
+    "description": "",
+    "tags": ["digital_art"],
+    "imageUrl": "https://raw.githubusercontent.com/dubiousEndCrystal/gallery-data/main/images/opalB.png"
+  },
+  {
+    "id": 7,
+    "title": "Vix (Inflated)",
+    "author": "ElectricFuzzball",
+    "description": "",
+    "tags": ["digital_art"],
+    "imageUrl": "https://raw.githubusercontent.com/dubiousEndCrystal/gallery-data/main/images/infB.png"
+  },
+  {
+    "id": 8,
+    "title": "Juno",
+    "author": "ElectricFuzzball",
+    "description": "",
+    "tags": ["digital_art"],
+    "imageUrl": "https://raw.githubusercontent.com/dubiousEndCrystal/gallery-data/main/images/junoB.png"
+  },
+  {
+    "id": 9,
+    "title": "Kin",
+    "author": "ElectricFuzzball",
+    "description": "",
+    "tags": ["digital_art"],
+    "imageUrl": "https://raw.githubusercontent.com/dubiousEndCrystal/gallery-data/main/images/kin_B.png"
+  },
+    {
+    "id": 10,
+    "title": "Lyra",
+    "author": "ElectricFuzzball",
+    "description": "",
+    "tags": ["digital_art"],
+    "imageUrl": "https://raw.githubusercontent.com/dubiousEndCrystal/gallery-data/main/images/lyra_B.png"
+  },
+    {
+    "id": 11,
+    "title": "Vix (Base)",
+    "author": "ElectricFuzzball",
+    "description": "",
+    "tags": ["digital_art"],
+    "imageUrl": "https://raw.githubusercontent.com/dubiousEndCrystal/gallery-data/main/images/mr penis.png"
+  },
+    {
+    "id": 12,
+    "title": "Jinx",
+    "author": "ElectricFuzzball",
+    "description": "",
+    "tags": ["digital_art"],
+    "imageUrl": "https://raw.githubusercontent.com/dubiousEndCrystal/gallery-data/main/images/sneptemper1B.png"
+  }
+]
